@@ -46,7 +46,7 @@ func serverConfig() {
 func routes() {
 	http.HandleFunc("/", WelcomeHandler)
 	http.HandleFunc("/Books", httpControler)
-	//http.HandleFunc("Books", NewBookHandler)
+	http.HandleFunc("/Book/?id", ListBookByIdHandler)
 }
 
 func main() {
@@ -62,6 +62,13 @@ func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
 func ListBooksHandler(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.Encode(books)
+}
+
+func ListBookByIdHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(w, "entrei")
+	id := r.FormValue("id")
+	fmt.Println(id)
+
 }
 
 func NewBookHandler(w http.ResponseWriter, r *http.Request) {
