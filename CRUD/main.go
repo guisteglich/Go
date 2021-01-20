@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type Book struct {
@@ -44,9 +45,9 @@ func serverConfig() {
 }
 
 func routes() {
-	http.HandleFunc("/", WelcomeHandler)
+	//http.HandleFunc("/", welcomeHandler)
 	http.HandleFunc("/Books", httpControler)
-	http.HandleFunc("/Book/?id", ListBookByIdHandler)
+	http.HandleFunc("/Books/", listBookByIDHandler)
 }
 
 func main() {
@@ -55,23 +56,37 @@ func main() {
 
 // Handlers
 
-func WelcomeHandler(w http.ResponseWriter, r *http.Request) {
+func welcomeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Welcome")
 }
 
-func ListBooksHandler(w http.ResponseWriter, r *http.Request) {
+func listBooksHandler(w http.ResponseWriter, r *http.Request) {
 	encoder := json.NewEncoder(w)
 	encoder.Encode(books)
 }
 
-func ListBookByIdHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(w, "entrei")
-	id := r.FormValue("id")
+func listBookByIDHandler(w http.ResponseWriter, r *http.Request) {
+	//fmt.Println(r.URL.Query())
+
+	id := r.URL.Query().Get("id")
+
 	fmt.Println(id)
+
+	NewID, _ := strconv.Atoi(id)
+
+	for _, uniqueBook := range books {
+		if uniqueBook.ID == NewID {
+			fmt.Println("temos aqui")
+			encoder := json.NewEncoder(w)
+			encoder.Encode(uniqueBook)
+		}
+		return
+	}
+	w.WriteHeader(http.StatusNotFound)
 
 }
 
-func NewBookHandler(w http.ResponseWriter, r *http.Request) {
+func newBookHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Fatal("err")
@@ -88,10 +103,10 @@ func NewBookHandler(w http.ResponseWriter, r *http.Request) {
 
 func httpControler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		ListBooksHandler(w, r)
+		listBooksHandler(w, r)
 
 	} else if r.Method == "POST" {
-		NewBookHandler(w, r)
+		newBookHandler(w, r)
 	}
 
 }
