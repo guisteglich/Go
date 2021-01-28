@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 func main() {
@@ -10,9 +11,10 @@ func main() {
 
 	fmt.Scanln(&r)
 
-	raiz := (math.pow(r, 3))
-	volume := (float64(4.0/3.0) * pi * (raiz))
+	raiz := math.Pow(r, 3)
+
+	volume := (4.0/3) * pi * raiz
 
 	fmt.Printf("VOLUME = %.3f\n", volume)
-
+		
 }
