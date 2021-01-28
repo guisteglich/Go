@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func main() {
 	var A, B, C float64
@@ -8,10 +11,12 @@ func main() {
 
 	fmt.Scanln(&A, &B, &C)
 
+	res := math.Pow(C, 2)
+
 	triangulo := (A * C) / 2
-	circulo := pi * (C * *2)
+	circulo := pi * (res)
 	trapezio := ((A + B) * C) / 2
-	quadrado := B * *2
+	quadrado := math.Pow(B, 2)
 	retangulo := A * B
 
 	fmt.Printf("TRIANGULO: %.3f\n", triangulo)
